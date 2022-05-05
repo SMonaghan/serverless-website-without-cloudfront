@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+		<head>
+			<!--<meta charset="utf-8">-->
+			<title>Word Solver</title>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+			<link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+			<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+			<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+			<link rel="manifest" href="/site.webmanifest">
+			<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+			<meta name="msapplication-TileColor" content="#da532c">
+			<meta name="theme-color" content="#ffffff">
+			<link rel="stylesheet" href="styles.css">
+			<!--<script src="http://code.jquery.com/jquery-1.9.1.js"></script>-->
+		</head>
+	<body>
+		<div1>Type out your guess below.
+		The format is the &ltguessed letter&gt:&ltY (Yellow), G (Green))&gt with letters separated by a space.  Gray/not used letters do not require a colon
+		For example:
+		a:y d i e:g u
+		Would be 'a' is in the wrong place, 'e' is in the right place, and 'd', 'i' and 'u' are not in the final word.
+		</div1>
+		<br>
+		<div id="message">
+			<form id="postForm">
+				<label for="guess">What is your guess:</label>
+				<input id="guess" name="guess" value="a d i:g e u:y">
+				<input type="submit" value="Guess!">
+			</form>
+		</div>
+		<div id="response"></div>
+		<br>
+		<div id=getdata>
+			<form id="getForm">
+				<label for="getData">Get Data:</label>
+				<input type="submit" value="Get Data">
+			</form>
+		</div>
+		<br>
+		<div id=cleardata>
+			<form id="deleteForm">
+				<label for="myName">Reset:</label>
+				<input type="submit" value="Reset">
+			</form>
+		</div>
+		
+		<script>
+			window.addEventListener( "load", function () {
+				function sendData() {
+					const XHR = new XMLHttpRequest();
+			
+					// Bind the FormData object and the form element
+					const FD = new FormData( postForm );
+					var guessValue = document.getElementById("guess").value;
+					console.log(guessValue);
+			
+					// Define what happens on successful data submission
+					XHR.addEventListener( "load", function(event) {
+						console.log(event.target.responseText);
+						$("#response").html("");
+						$('#response').append(event.target.responseText);
+					} );
+					
+					XHR.open( "POST", "<ReplaceWithWebsiteDomain>" );
+					XHR.withCredentials = true;
+					XHR.send(guessValue)
+				}
+				
+				function getData() {
+					const XHR = new XMLHttpRequest();
+			
+					// Bind the FormData object and the form element
+					const FD = new FormData( getForm );
+					
+					// Define what happens on successful data submission
+					XHR.addEventListener( "load", function(event) {
+						console.log(event.target.responseText);
+						$("#response").html("");
+						$('#response').append(event.target.responseText);
+					} );
+					
+					XHR.open( "GET", "<ReplaceWithWebsiteDomain>" );
+					XHR.withCredentials = true;
+					XHR.send(null)
+				}
+				
+				function resetData() {
+					const XHR = new XMLHttpRequest();
+			
+					const FD = new FormData( deleteForm );
+			
+					XHR.addEventListener( "load", function(event) {
+						console.log(event.target.responseText);
+						$("#response").html("");
+					} );
+			
+					XHR.open( "DELETE", "<ReplaceWithWebsiteDomain>" );
+					XHR.withCredentials = true;
+					XHR.send(null)
+				}
+			
+				// Access the form element...
+				const form = document.getElementById( "postForm" );
+				const resetForm = document.getElementById( "deleteForm" );
+				const getForm = document.getElementById( "getForm" );
+			
+				// ...and take over its submit event.
+				form.addEventListener( "submit", function ( event ) {
+					event.preventDefault();
+					sendData();
+				} );
+				
+				resetForm.addEventListener( "submit", function ( event ) {
+					event.preventDefault();
+					resetData();
+				} );
+				
+				getForm.addEventListener( "submit", function ( event ) {
+					event.preventDefault();
+					getData();
+				} );
+			} );
+		</script>
+	</body>
+</html>
